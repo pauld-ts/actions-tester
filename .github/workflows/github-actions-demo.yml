@@ -24,3 +24,6 @@ jobs:
         with:
           repository: "aptos-labs/aptos-core"
           ref: "aptos-node-v1.6.2"
+      - run: cargo build --package aptos --profile {{ release }}"
+      - run: |
+          ls ${{ github.workspace }}
