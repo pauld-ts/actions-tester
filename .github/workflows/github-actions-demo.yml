@@ -26,5 +26,7 @@ jobs:
           ref: "aptos-node-v1.6.2"
       - run: "./scripts/dev_setup.sh -b"
       - run: cargo build --package aptos --profile release
-      - run: |
-          ls ${{ github.workspace }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: aptos-v1.6.2
+          path: target/release/aptos
