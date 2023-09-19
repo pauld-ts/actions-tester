@@ -22,24 +22,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: "aptos-labs/aptos-core"
-          ref: "aptos-node-v1.6.2"
-      - uses: softprops/action-gh-release@v1
-        with:
-          files: "./scripts/dev_setup.sh"
-          tag_name: test-r-2
       # - uses: actions/checkout@v4
       #   with:
       #     repository: "aptos-labs/aptos-core"
       #     ref: "aptos-node-v1.6.2"
-      # - run: "./scripts/dev_setup.sh -b"
-      # - run: cargo build --package aptos --profile release
       # - uses: softprops/action-gh-release@v1
       #   with:
-      #     files: target/release/aptos
-      #     tag_name: aptos-node-v1.6.2
+      #     files: "./scripts/dev_setup.sh"
+      #     tag_name: test-r-2
+      - uses: actions/checkout@v4
+        with:
+          repository: "aptos-labs/aptos-core"
+          ref: "aptos-node-v1.6.2"
+      - run: "./scripts/dev_setup.sh -b"
+      - run: cargo build --package aptos --profile release
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: target/release/aptos
+          tag_name: test-r-3
       # - uses: actions/upload-artifact@v3
       #   with:
       #     name: aptos-v1.6.2
