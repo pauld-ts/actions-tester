@@ -22,10 +22,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: "aptos-labs/aptos-core"
+          ref: "aptos-node-v1.6.2"
       - uses: softprops/action-gh-release@v1
         with:
-          files: test.txt
-          tag_name: test-r-1
+          files: "./scripts/dev_setup.sh"
+          tag_name: test-r-2
       # - uses: actions/checkout@v4
       #   with:
       #     repository: "aptos-labs/aptos-core"
