@@ -36,10 +36,11 @@ jobs:
           ref: "aptos-node-v1.6.2"
       - run: "./scripts/dev_setup.sh -b"
       - run: cargo build --package aptos --profile release
+      - run: tar -czvf target/release/aptos-v1.6.2.tgz target/release/aptos
       - uses: softprops/action-gh-release@v1
         with:
-          files: target/release/aptos
-          tag_name: test-r-3
+          files: target/release/aptos-v1.6.2.tgz
+          tag_name: test-r-4
       # - uses: actions/upload-artifact@v3
       #   with:
       #     name: aptos-v1.6.2
