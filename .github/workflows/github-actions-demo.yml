@@ -36,7 +36,16 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - run: "./scripts/dev_setup.sh -b"
-      # - run: cargo build --package aptos-node --profile release
+      - run: cargo build --package aptos-node --profile release
+      - uses: actions/cache/save@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       # - run: tar -czvf aptos-node-v1.6.2.tgz -C target/release/ aptos-node
       # - uses: softprops/action-gh-release@v1
       #   with:
