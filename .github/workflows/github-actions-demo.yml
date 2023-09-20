@@ -26,13 +26,22 @@ jobs:
         with:
           repository: "aptos-labs/aptos-core"
           ref: "aptos-node-v1.6.2"
-      - run: "./scripts/dev_setup.sh -b"
-      - run: cargo build --package aptos-node --profile release
-      - run: tar -czvf aptos-node-v1.6.2.tgz -C target/release/ aptos-node
-      - uses: softprops/action-gh-release@v1
+      - uses: actions/cache@v3
         with:
-          files: aptos-node-v1.6.2.tgz
-          tag_name: test-r-6
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - run: "./scripts/dev_setup.sh -b"
+      # - run: cargo build --package aptos-node --profile release
+      # - run: tar -czvf aptos-node-v1.6.2.tgz -C target/release/ aptos-node
+      # - uses: softprops/action-gh-release@v1
+      #   with:
+      #     files: aptos-node-v1.6.2.tgz
+      #     tag_name: test-r-6
       # - uses: actions/checkout@v4
       #   with:
       #     repository: "aptos-labs/aptos-core"
