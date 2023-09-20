@@ -31,8 +31,8 @@ jobs:
       - run: tar -czvf aptos-node-v1.6.2.tgz -C target/release/ aptos-node
       - uses: softprops/action-gh-release@v1
         with:
-          files: target/release/aptos-node-v1.6.2.tgz
-          tag_name: test-r-5
+          files: aptos-node-v1.6.2.tgz
+          tag_name: test-r-6
       # - uses: actions/checkout@v4
       #   with:
       #     repository: "aptos-labs/aptos-core"
