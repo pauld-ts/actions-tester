@@ -19,24 +19,58 @@ permissions:
 #           ls ${{ github.workspace }}
 #       - run: echo "🍏 This job's status is ${{ job.status }}."
 jobs:
-  build:
+  build-1:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: tar -czvf test-1.tgz test-1.txt
+      - uses: actions/upload-artifact@v3
         with:
-          repository: "aptos-labs/aptos-core"
-          ref: "aptos-node-v1.7.2"
-      - uses: actions/cache@v3
+          name: test-1.tgz
+          path: test-1.tgz
+  build-2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: tar -czvf test-2.tgz test-2.txt
+      - uses: actions/upload-artifact@v3
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-1-${{ hashFiles('**/Cargo.lock') }}
-      - run: "./scripts/dev_setup.sh -b"
-      - run: cargo build --package aptos-node --profile release
+          name: test-2.tgz
+          path: test-2.tgz
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: test-1.tgz
+      - uses: actions/download-artifact@v3
+        with:
+          name: test-2.tgz
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            test-1.tgz
+            test-2.tgz
+          tag_name: test-r-7
+
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         repository: "aptos-labs/aptos-core"
+  #         ref: "aptos-node-v1.7.2"
+  #     - uses: actions/cache@v3
+  #       with:
+  #         path: |
+  #           ~/.cargo/bin/
+  #           ~/.cargo/registry/index/
+  #           ~/.cargo/registry/cache/
+  #           ~/.cargo/git/db/
+  #           target/
+  #         key: ${{ runner.os }}-cargo-1-${{ hashFiles('**/Cargo.lock') }}
+  #     - run: "./scripts/dev_setup.sh -b"
+  #     - run: cargo build --package aptos-node --profile release
       # - uses: actions/cache/save@v3
       #   with:
       #     path: |
