@@ -39,6 +39,7 @@ jobs:
           path: test-2.tgz
   release:
     runs-on: ubuntu-latest
+    needs: [build-1,build-2]
     steps:
       - uses: actions/download-artifact@v3
         with:
