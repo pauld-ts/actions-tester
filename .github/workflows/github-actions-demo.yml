@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: "aptos-labs/aptos-core"
-          ref: "aptos-node-v1.6.2"
+          ref: "aptos-node-v1.7.2"
       - uses: actions/cache@v3
         with:
           path: |
