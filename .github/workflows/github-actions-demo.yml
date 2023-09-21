@@ -18,41 +18,88 @@ permissions:
 #         run: |
 #           ls ${{ github.workspace }}
 #       - run: echo "🍏 This job's status is ${{ job.status }}."
+
+env:
+  APTOS_VERSION: v1.6.2
 jobs:
   build-1:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: tar -czvf test-1.tgz test-1.txt
+        with:
+          repository: "aptos-labs/aptos-core"
+          ref: "aptos-node-$APTOS_VERSION"
+      - run: "./scripts/dev_setup.sh -b"
+      - run: cargo build --package aptos-node --profile release
+      - run: tar -czvf aptos-node-$APTOS_VERSION.tgz -C target/release/ aptos-node
       - uses: actions/upload-artifact@v3
         with:
-          name: test-1.tgz
-          path: test-1.tgz
+          name: "aptos-node-$APTOS_VERSION.tgz"
+          path: "aptos-node-$APTOS_VERSION.tgz"
   build-2:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: tar -czvf test-2.tgz test-2.txt
+        with:
+          repository: "aptos-labs/aptos-core"
+          ref: "aptos-node-$APTOS_VERSION"
+      - run: "./scripts/dev_setup.sh -b"
+      - run: cargo build --package aptos --profile release
+      - run: tar -czvf aptos-$APTOS_VERSION.tgz -C target/release/ aptos
       - uses: actions/upload-artifact@v3
         with:
-          name: test-2.tgz
-          path: test-2.tgz
+          name: "aptos-$APTOS_VERSION.tgz"
+          path: "aptos-$APTOS_VERSION.tgz"
   release:
     runs-on: ubuntu-latest
     needs: [build-1,build-2]
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: test-1.tgz
+          name: "aptos-node-$APTOS_VERSION.tgz"
       - uses: actions/download-artifact@v3
         with:
-          name: test-2.tgz
+          name: "aptos-$APTOS_VERSION.tgz"
       - uses: softprops/action-gh-release@v1
         with:
           files: |
-            test-1.tgz
-            test-2.tgz
-          tag_name: test-r-7
+            "aptos-node-$APTOS_VERSION.tgz"
+            "aptos-$APTOS_VERSION.tgz"
+          tag_name: "test-r-$APTOS_VERSION"
+  # build-1:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - run: tar -czvf test-1.tgz test-1.txt
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: test-1.tgz
+  #         path: test-1.tgz
+  # build-2:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - run: tar -czvf test-2.tgz test-2.txt
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: test-2.tgz
+  #         path: test-2.tgz
+  # release:
+  #   runs-on: ubuntu-latest
+  #   needs: [build-1,build-2]
+  #   steps:
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: test-1.tgz
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: test-2.tgz
+  #     - uses: softprops/action-gh-release@v1
+  #       with:
+  #         files: |
+  #           test-1.tgz
+  #           test-2.tgz
+  #         tag_name: test-r-7
 
   # build:
   #   runs-on: ubuntu-latest
